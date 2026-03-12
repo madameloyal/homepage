@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Festiflow — Home</title>
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+<style>
+/* ────────────────────────────────────
+   Reset & Custom Properties
+   ──────────────────────────────────── */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+
+:root{
+  --accent:#d4522a;
+  --green:#3ba55d;
+  --amber:#f5a623;
+  --red:#ed4245;
+  --blue:#5865f2;
+  --purple:#9b59b6;
+
+  /* Zone 1 — Frame: header + right sidebar */
+  --frame:#2c2f47;
+  --frame-card:#3a3d5e;
+  --frame-input:#30324d;
+
+  /* Zone 2 — Main content (darkest) */
+  --bg-top:#1e203f;
+  --bg-bot:#15182e;
+  --card:#1e203f;
+  --card-hover:#272a48;
+
+  --c1:#fff;
+  --c2:rgba(255,255,255,.72);
+  --c3:rgba(255,255,255,.40);
+  --c4:rgba(255,255,255,.12);
+
+  /* Type scale */
+  --fs-xs:9px;
+  --fs-sm:11px;
+  --fs-md:13px;
+  --fs-lg:15px;
+  --fs-xl:18px;
+  --fs-2xl:24px;
+  --fw-r:400;
+  --fw-m:500;
+  --fw-s:600;
+  --fw-b:800;
+}
+
+html,body{
+  height:100%;overflow:hidden;
+  background:linear-gradient(180deg,#7758cf,#8c6bd8 50%,#be98e9);
+  font-family:'Outfit',sans-serif;-webkit-font-smoothing:antialiased;
+}
+
+/* ────────────────────────────────────
+   App Shell — 4 column flex
+   ──────────────────────────────────── */
+.app{
+  display:flex;width:100vw;height:100vh;height:100dvh;
+}
+
+/* ────────────────────────────────────
+   LEFT ZONE — wraps rail + nav + bottom bar
+   ──────────────────────────────────── */
+.left-zone{
+  display:flex;flex-direction:column;flex-shrink:0;
+  width:284px; /* 64 rail + 220 nav */
+}
+.left-top{display:flex;flex:1;overflow:hidden}
+
+/* Bottom bar — spans full left zone width */
+.left-bottom{
+  display:flex;align-items:center;gap:10px;
+  padding:10px 14px;
+  background:#1a1c38;
+  border-top:1px solid rgba(255,255,255,.15);
+}
+.lb-name{flex:1;min-width:0}
+.lb-user{font-size:var(--fs-md);font-weight:var(--fw-s);color:var(--c1)}
+.lb-icons{display:flex;gap:2px;align-items:center}
+.lb-b{
+  width:30px;height:30px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:background .14s;
+}
+.lb-b:hover{background:rgba(255,255,255,.08)}
+.lb-b svg{width:16px;height:16px;fill:none;stroke:var(--c3);stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;transition:stroke .14s}
+.lb-b:hover svg{stroke:var(--c1)}
+
+/* ────────────────────────────────────
+   1. OUTER RAIL — Module switcher
+   ──────────────────────────────────── */
+.rail{
+  width:64px;flex-shrink:0;background:transparent;
+  display:flex;flex-direction:column;align-items:center;
+  padding:0;gap:6px;z-index:10;
+}
+.rail-logo{
+  width:40px;height:40px;border-radius:50%;overflow:hidden;
+  cursor:pointer;flex-shrink:0;
+  box-shadow:0 0 0 2px rgba(212,82,42,.45),0 2px 10px rgba(212,82,42,.25);
+  transition:border-radius .2s;
+}
+.rail-logo:hover{border-radius:12px}
+.rail-logo img{width:100%;height:100%;object-fit:cover;display:block}
+.rail-top{
+  height:56px;display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  width:100%;border-bottom:1px solid rgba(255,255,255,.08);
+}
+.rail-icons{display:flex;flex-direction:column;align-items:center;gap:8px;margin:auto 0;padding:6px 0}
+/* Event thumbnail in rail */
+.rail-ev-wrap{position:relative;width:50px;height:50px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.rail-event{
+  width:42px;height:42px;
+  clip-path:polygon(50% 0%,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%);
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;position:relative;z-index:1;
+  background:rgba(255,255,255,.08);
+  transition:background .2s;
+  overflow:hidden;
+}
+.rail-event span{
+  font-size:var(--fs-sm);font-weight:var(--fw-b);color:var(--c2);
+  letter-spacing:-.5px;
+}
+.rail-event img{width:100%;height:100%;object-fit:cover}
+.rail-event:hover{background:rgba(255,255,255,.12)}
+.rail-event.on span{color:#fff}
+/* Active hex glow border */
+.rail-ev-hex{
+  position:absolute;inset:0;z-index:0;
+  filter:drop-shadow(0 0 8px rgba(212,82,42,.4)) drop-shadow(0 0 16px rgba(155,89,182,.25));
+  display:none;
+}
+.rail-event.on ~ .rail-ev-hex{display:block}
+/* Active indicator pill */
+.rail-event::before{
+  content:'';position:absolute;left:-3px;top:50%;transform:translateY(-50%);
+  width:3px;border-radius:0 3px 3px 0;background:#fff;
+  height:0;opacity:0;transition:height .18s,opacity .18s;
+}
+.rail-event:hover::before{height:8px;opacity:.5}
+.rail-event.on::before{height:18px;opacity:1}
+/* Add event button */
+.rail-add{
+  width:42px;height:42px;border-radius:50%;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;background:rgba(255,255,255,.05);
+  color:var(--green);font-size:var(--fs-2xl);font-weight:var(--fw-r);
+  transition:border-radius .2s,background .2s;
+}
+.rail-add:hover{border-radius:12px;background:var(--green);color:#fff}
+
+/* ────────────────────────────────────
+   2. INNER NAV — Page navigation
+   Bare icons (no box), like reference
+   ──────────────────────────────────── */
+.nav{
+  width:220px;flex-shrink:0;
+  display:flex;flex-direction:column;
+  background:linear-gradient(180deg,rgba(80,75,120,.5) 0%,rgba(45,42,80,.6) 100%);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border-right:1px solid rgba(255,255,255,.06);
+  border-radius:0;
+  box-shadow:inset 0 1px 0 rgba(255,255,255,.15),0 8px 32px rgba(0,0,0,.25);
+}
+.nav-head{
+  height:56px;display:flex;align-items:center;padding:0 18px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+  font-size:var(--fs-xl);font-weight:var(--fw-b);color:var(--c1);letter-spacing:-.3px;
+  flex-shrink:0;
+}
+.nav-list{flex:1;overflow-y:auto;padding:8px 8px}
+.nav-list::-webkit-scrollbar{display:none}
+.nav-sep{height:1px;background:rgba(255,255,255,.08);margin:6px 32px}
+
+.ni{
+  display:flex;align-items:center;gap:12px;
+  padding:9px 12px;border-radius:8px;margin-bottom:1px;
+  cursor:pointer;text-decoration:none;color:inherit;
+  transition:background .14s;
+}
+.ni:hover{background:rgba(0,0,0,.15)}
+.ni.on{background:rgba(15,16,35,.55)}
+.ni svg{
+  width:18px;height:18px;flex-shrink:0;fill:none;
+  stroke:var(--c3);stroke-width:1.6;
+  stroke-linecap:round;stroke-linejoin:round;
+  transition:stroke .14s;
+}
+.ni:hover svg{stroke:var(--c2)}
+.ni.on svg{stroke:var(--green)}
+.ni span{font-size:var(--fs-md);font-weight:var(--fw-m);color:var(--c2);transition:color .14s}
+.ni:hover span{color:var(--c1)}
+.ni.on span{color:var(--c1);font-weight:var(--fw-s)}
+/* Sub-nav items */
+.ni.sub{padding-left:42px}
+.ni.sub svg{width:15px;height:15px}
+.ni.sub span{font-size:var(--fs-md)}
+.ni em{
+  margin-left:auto;font-style:normal;
+  font-family:'JetBrains Mono',monospace;
+  font-size:var(--fs-xs);font-weight:var(--fw-s);padding:2px 7px;border-radius:10px;
+}
+.em-g{background:rgba(59,165,93,.18);color:var(--green)}
+.em-a{background:rgba(245,166,35,.18);color:var(--amber)}
+.em-r{background:rgba(237,66,69,.18);color:var(--red)}
+.em-d{background:rgba(255,255,255,.08);color:var(--c3)}
+
+/* Bottom-left hex avatar */
+.lb-wrap{position:relative;width:36px;height:36px;flex-shrink:0}
+.lb-av{
+  width:28px;height:28px;
+  clip-path:polygon(50% 0%,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%);
+  background:linear-gradient(140deg,var(--accent),#7d1e0a);
+  display:flex;align-items:center;justify-content:center;
+  font-size:var(--fs-sm);font-weight:var(--fw-b);color:#fff;
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2;
+}
+.lb-img{
+  width:28px;height:28px;object-fit:cover;
+  clip-path:polygon(50% 0%,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%);
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2;
+}
+.lb-hex{position:absolute;inset:1px;z-index:1}
+.lb-hex svg{width:100%;height:100%}
+
+/* ────────────────────────────────────
+   3. MAIN CONTENT
+   ──────────────────────────────────── */
+.main{
+  flex:1;display:flex;flex-direction:column;overflow:hidden;min-width:0;
+  background:linear-gradient(180deg,var(--bg-top),var(--bg-bot));
+}
+
+/* Topbar */
+.topbar{
+  height:56px;flex-shrink:0;display:flex;align-items:center;
+  padding:0 16px;
+  background:var(--frame);
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.tb-spacer{width:32px;flex-shrink:0}
+.tb-search{
+  display:flex;align-items:center;gap:8px;
+  background:var(--frame-input);border:1px solid rgba(255,255,255,.08);
+  border-radius:8px;padding:8px 18px;flex:1;max-width:420px;cursor:text;
+  margin:0 auto;
+}
+.tb-search svg{width:14px;height:14px;fill:none;stroke:var(--c3);stroke-width:2;flex-shrink:0}
+.tb-search span{font-size:var(--fs-md);color:var(--c3)}
+.tb-toggle{
+  width:32px;height:32px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:background .14s;
+  margin-left:auto;
+}
+.tb-toggle:hover{background:rgba(255,255,255,.06)}
+.tb-toggle svg{width:16px;height:16px;fill:none;stroke:var(--c3);stroke-width:1.6;stroke-linecap:round;transition:stroke .14s}
+.tb-toggle:hover svg{stroke:var(--c1)}
+.tb-b{
+  width:32px;height:32px;border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;transition:background .14s;
+}
+.tb-b:hover{background:rgba(255,255,255,.06)}
+.tb-b svg{width:16px;height:16px;fill:none;stroke:var(--c3);stroke-width:1.6;stroke-linecap:round;transition:stroke .14s}
+.tb-b:hover svg{stroke:var(--c1)}
+
+/* Scroll */
+.content{flex:1;overflow-y:auto;padding:22px 24px 40px}
+.content::-webkit-scrollbar{width:4px}
+.content::-webkit-scrollbar-thumb{background:rgba(255,255,255,.06);border-radius:4px}
+
+/* Hero */
+.hero{
+  height:180px;border-radius:14px;overflow:hidden;margin-bottom:28px;
+  position:relative;cursor:pointer;
+  background:url('https://madameloyal.github.io/homepage/homepage_background.jpg') center/cover no-repeat;
+  transition:transform .25s;
+}
+.hero:hover{transform:scale(1.003)}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:linear-gradient(135deg,rgba(26,5,53,.85),rgba(107,33,168,.65) 40%,rgba(192,38,211,.45) 65%,rgba(244,114,182,.4));
+}
+.hero-ov{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.3),transparent 60%)}
+.hero-t{
+  position:relative;z-index:2;padding:0 32px;height:100%;
+  display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;
+}
+.hero-t h2{font-size:var(--fs-2xl);font-weight:var(--fw-b);color:#fff;line-height:1.2;letter-spacing:-.5px;text-shadow:0 2px 20px rgba(0,0,0,.3)}
+.hero-t p{font-size:var(--fs-md);color:rgba(255,255,255,.65);margin-top:6px}
+
+/* Section heads */
+.sh{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.sh h3{font-size:var(--fs-lg);font-weight:var(--fw-s);color:var(--c1)}
+.sh a{font-size:var(--fs-md);color:var(--c3);text-decoration:none;cursor:pointer;transition:color .14s}
+.sh a:hover{color:var(--c1)}
+
+/* Featured 2-col cards */
+.fg{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:28px}
+.fc{border-radius:12px;overflow:hidden;height:175px;position:relative;cursor:pointer;transition:transform .22s,box-shadow .22s}
+.fc:hover{transform:translateY(-3px);box-shadow:0 12px 40px rgba(0,0,0,.35)}
+.fc-bg{position:absolute;inset:0}
+.fc-bg.gp{background:linear-gradient(145deg,#0f0a2e,#5b21b6 40%,#7c3aed 65%,#a855f7 85%,#c084fc)}
+.fc-bg.gp::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 70% 70% at 75% 35%,rgba(167,139,250,.45),transparent 55%),radial-gradient(ellipse 50% 50% at 20% 75%,rgba(139,92,246,.3),transparent 55%)}
+.fc-bg.gb{background:linear-gradient(145deg,#0c1a2e,#1e40af 35%,#3b82f6 60%,#06b6d4 85%,#22d3ee)}
+.fc-bg.gb::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 60% at 80% 30%,rgba(59,130,246,.45),transparent 55%),radial-gradient(ellipse 50% 50% at 15% 80%,rgba(6,182,212,.35),transparent 55%)}
+.fc-bg.gg{background:linear-gradient(145deg,#0a2e1a,#15803d 35%,#22c55e 60%,#34d399 85%,#6ee7b7)}
+.fc-bg.gg::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 60% at 75% 35%,rgba(52,211,153,.4),transparent 55%),radial-gradient(ellipse 50% 50% at 20% 75%,rgba(34,197,94,.3),transparent 55%)}
+.fc-bg.go{background:linear-gradient(145deg,#2e1a0a,#b45309 35%,#d97706 55%,#f59e0b 75%,#fbbf24)}
+.fc-bg.go::after{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 60% 60% at 80% 30%,rgba(245,158,11,.4),transparent 55%),radial-gradient(ellipse 50% 50% at 15% 80%,rgba(217,119,6,.3),transparent 55%)}
+.fc-ct{
+  position:absolute;bottom:0;left:0;right:0;z-index:2;
+  background:linear-gradient(0deg,rgba(0,0,0,.7),rgba(0,0,0,.12) 70%,transparent);
+  padding:14px 18px 16px;
+}
+.fc-ct h4{font-size:var(--fs-xl);font-weight:var(--fw-b);color:#fff;margin-bottom:4px;letter-spacing:-.2px}
+.fc-ct p{font-size:var(--fs-sm);color:rgba(255,255,255,.58);line-height:1.45;margin-bottom:10px}
+.fc-ct .st{display:flex;gap:16px}
+.fc-ct .st span{font-family:'JetBrains Mono',monospace;font-size:var(--fs-xs);color:rgba(255,255,255,.42)}
+
+/* Other modules — clean text cards, no icons */
+.mg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:28px}
+.mc{
+  padding:16px 18px;border-radius:10px;background:var(--card);
+  cursor:pointer;transition:background .14s,transform .14s;
+}
+.mc:hover{background:var(--card-hover);transform:translateY(-1px)}
+.mc h5{font-size:var(--fs-md);font-weight:var(--fw-s);color:var(--c1);margin-bottom:3px}
+.mc p{font-size:var(--fs-sm);color:var(--c3);line-height:1.4}
+
+/* ────────────────────────────────────
+   4. RIGHT SIDEBAR — Collapsible
+   ──────────────────────────────────── */
+/* Countdown cards */
+.cd{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 12px;border-radius:6px;margin-bottom:6px;
+  background:var(--frame-card);
+}
+.cd-info{display:flex;flex-direction:column}
+.cd-name{font-size:var(--fs-md);font-weight:var(--fw-s);color:var(--c2)}
+.cd-date{font-size:var(--fs-sm);color:var(--c3)}
+.cd-count{
+  font-family:'JetBrains Mono',monospace;
+  font-size:var(--fs-sm);font-weight:var(--fw-s);padding:3px 8px;
+  border-radius:6px;white-space:nowrap;
+}
+.cd-soon{background:rgba(237,66,69,.15);color:var(--red)}
+.cd-mid{background:rgba(245,166,35,.15);color:var(--amber)}
+.cd-far{background:rgba(59,165,93,.15);color:var(--green)}
+/* Activity event tag */
+.mr-ev{
+  font-family:'JetBrains Mono',monospace;
+  font-size:var(--fs-xs);font-weight:var(--fw-s);padding:1px 5px;
+  border-radius:4px;background:rgba(255,255,255,.08);
+  color:var(--c3);margin-left:4px;display:inline;
+}
+
+.right{
+  width:280px;flex-shrink:0;background:var(--frame);
+  border-left:1px solid rgba(255,255,255,.06);
+  display:flex;flex-direction:column;overflow-y:auto;
+  transition:width .3s,opacity .3s;
+}
+.right.shut{width:0;overflow:hidden;opacity:0;border-left:none}
+.right::-webkit-scrollbar{display:none}
+.rt-head{
+  display:flex;justify-content:space-evenly;align-items:center;
+  height:56px;
+  border-bottom:1px solid rgba(255,255,255,.06);
+  flex-shrink:0;
+}
+
+/* Profile with hex frame */
+.pf{
+  padding:28px 20px 20px;display:flex;flex-direction:column;
+  align-items:center;border-bottom:1px solid rgba(255,255,255,.06);
+}
+.pf-wrap{position:relative;width:110px;height:110px;margin-bottom:14px}
+.pf-img{
+  width:80px;height:80px;object-fit:cover;
+  clip-path:polygon(50% 2%,93% 25%,93% 75%,50% 98%,7% 75%,7% 25%);
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2;
+}
+/* Hex decorative frame */
+.pf-hex{position:absolute;inset:2px;z-index:1}
+.pf-hex svg{width:100%;height:100%}
+
+.pf-name{font-size:var(--fs-lg);font-weight:var(--fw-s);color:#fff;margin-bottom:2px}
+.pf-tag{font-family:'JetBrains Mono',monospace;font-size:var(--fs-sm);color:rgba(255,255,255,.45)}
+
+/* Right sections */
+.rs{padding:16px 20px}
+.rs-h{
+  font-size:var(--fs-md);font-weight:var(--fw-s);color:var(--c3);text-transform:uppercase;
+  letter-spacing:.08em;margin-bottom:14px;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.rs-h a{font-weight:var(--fw-m);font-size:var(--fs-sm);color:var(--c3);text-decoration:none;cursor:pointer;transition:color .14s}
+.rs-h a:hover{color:var(--c1)}
+.rdiv{height:1px;background:rgba(255,255,255,.06)}
+
+/* Member row — card style like reference */
+.mr{
+  display:flex;align-items:center;gap:12px;
+  padding:10px 12px;border-radius:6px;cursor:pointer;margin-bottom:6px;
+  background:var(--frame-card);
+  transition:background .14s;
+}
+.mr:hover{background:#444768}
+
+/* Mini hex avatar wrapper */
+.mr-wrap{position:relative;width:38px;height:38px;flex-shrink:0}
+.mr-av{
+  width:30px;height:30px;
+  clip-path:polygon(50% 0%,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%);
+  display:flex;align-items:center;justify-content:center;
+  font-size:var(--fs-sm);font-weight:var(--fw-b);color:#fff;
+  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2;
+}
+.mr-hex{position:absolute;inset:1px;z-index:1}
+.mr-hex svg{width:100%;height:100%}
+
+.mr-n{font-size:var(--fs-md);font-weight:var(--fw-s);color:var(--c2);transition:color .14s}
+.mr:hover .mr-n{color:var(--c1)}
+.mr-t{font-size:var(--fs-sm);color:var(--c3)}
+
+/* ────────────────────────────────────
+   5. MOBILE — ≤768px
+   ──────────────────────────────────── */
+.mob{display:none}
+
+@media(max-width:768px){
+  .left-zone,.right{display:none!important}
+  .app{flex-direction:column}
+  .main{flex:1;padding-bottom:62px}
+  .topbar{height:52px;padding:0 14px}
+  .tb-search{flex:1;width:auto}
+  .content{padding:14px 14px 24px}
+  .hero{height:140px;margin-bottom:20px}
+  .hero-t h2{font-size:var(--fs-2xl)}
+  .fg{grid-template-columns:1fr;gap:10px;margin-bottom:20px}
+  .fc{height:155px}
+  .mg{grid-template-columns:1fr;gap:8px}
+  .mob{
+    position:fixed;bottom:0;left:0;right:0;height:62px;
+    background:rgba(19,20,42,.96);backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+    border-top:1px solid rgba(255,255,255,.08);
+    display:flex;align-items:flex-start;padding-top:8px;z-index:500;
+    padding-bottom:env(safe-area-inset-bottom,0px);
+  }
+  .mi{
+    flex:1;display:flex;flex-direction:column;align-items:center;
+    gap:3px;cursor:pointer;padding:2px 0;position:relative;
+  }
+  .mi svg{width:20px;height:20px;fill:none;stroke:var(--c3);stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+  .mi.on svg{stroke:#fff}
+  .mi small{font-size:var(--fs-xs);font-weight:var(--fw-m);color:var(--c3);line-height:1}
+  .mi.on small{color:#fff;font-weight:var(--fw-s)}
+  .mi.on::before{content:'';position:absolute;top:-8px;left:50%;transform:translateX(-50%);width:24px;height:3px;border-radius:0 0 3px 3px;background:var(--accent)}
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<!-- LEFT ZONE (rail + nav + bottom bar) -->
+<div class="left-zone">
+  <div class="left-top">
+    <!-- 1. RAIL -->
+    <div class="rail">
+      <div class="rail-top"><div class="rail-logo"><img src="https://madameloyal.github.io/homepage/LOGO_ROND_JAUNE.png" alt="Festiflow"></div></div>
+      <div class="rail-icons">
+        <!-- Paris XXL 2026 (active) -->
+        <div class="rail-ev-wrap">
+          <div class="rail-event on" title="Paris XXL 2026">
+            <span>PA</span>
+          </div>
+          <svg class="rail-ev-hex" viewBox="0 0 100 100" fill="none"><polygon points="50,0 97,25 97,75 50,100 3,75 3,25" stroke="rgba(212,82,42,.6)" stroke-width="2.5"/></svg>
+        </div>
+        <!-- Bordeaux ML × SONORA 2026 -->
+        <div class="rail-ev-wrap">
+          <div class="rail-event" title="Bordeaux ML × SONORA 2026">
+            <span>BO</span>
+          </div>
+        </div>
+        <!-- Add new event -->
+        <div class="rail-add" title="Nouvel événement">+</div>
+      </div>
+    </div>
+
+    <!-- 2. NAV -->
+    <div class="nav">
+      <div class="nav-head">Festiflow</div>
+      <div class="nav-list">
+        <!-- Dashboard -->
+        <a class="ni on" href="#"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 17.5h7M17.5 14v7"/></svg><span>Dashboard</span></a>
+        <a class="ni" href="#"><svg viewBox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><span>Tous Les Événements</span></a>
+        <div class="nav-sep"></div>
+        <!-- Finance & Revenue -->
+        <a class="ni" href="#"><svg viewBox="0 0 24 24"><path d="M12 1v22M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg><span>Budget</span></a>
+        <a class="ni sub" href="#"><svg viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M2 10h20"/></svg><span>Qonto</span></a>
+        <div class="nav-sep"></div>
+        <a class="ni" href="#"><svg viewBox="0 0 24 24"><path d="M2 9l4-4 4 4"/><path d="M6 5v14"/><path d="M22 15l-4 4-4-4"/><path d="M18 19V5"/></svg><span>Billetterie</span></a>
+        <a class="ni sub" href="#"><svg viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M2 10h20"/></svg><span>DICE</span></a>
+        <a class="ni sub" href="#"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg><span>Shotgun</span></a>
+        <a class="ni sub" href="#"><svg viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 016.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 014 19.5v-15A2.5 2.5 0 016.5 2z"/></svg><span>Pass Culture</span></a>
+        <a class="ni sub" href="#"><svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg><span>Resident Advisor</span></a>
+        <div class="nav-sep"></div>
+        <!-- People & Talent -->
+        <a class="ni" href="#"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg><span>Staffing</span></a>
+        <a class="ni sub" href="#"><svg viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M12 11h4M12 16h4M8 11h.01M8 16h.01"/></svg><span>VHR</span></a>
+        <a class="ni sub" href="#"><svg viewBox="0 0 24 24"><path d="M18 8h1a4 4 0 010 8h-1"/><path d="M2 8h16v9a4 4 0 01-4 4H6a4 4 0 01-4-4V8z"/><path d="M6 1v3M10 1v3M14 1v3"/></svg><span>Catering</span></a>
+        <a class="ni" href="#"><svg viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v6c0 1.66 4.03 3 9 3s9-1.34 9-3V5"/><path d="M3 11v6c0 1.66 4.03 3 9 3s9-1.34 9-3v-6"/></svg><span>Base RH</span></a>
+        <div class="nav-sep"></div>
+        <a class="ni" href="#"><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg><span>Artistes</span></a>
+        <a class="ni sub" href="#"><svg viewBox="0 0 24 24"><path d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg><span>Booking</span></a>
+        <a class="ni sub" href="#"><svg viewBox="0 0 24 24"><path d="M4 6h16M4 12h16M4 18h10"/></svg><span>Line-Up</span></a>
+        <a class="ni" href="#"><svg viewBox="0 0 24 24"><path d="M16 4h2a2 2 0 012 2v14a2 2 0 01-2 2H6a2 2 0 01-2-2V6a2 2 0 012-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M12 11h4M12 16h4M8 11h.01M8 16h.01"/></svg><span>Guest List</span></a>
+        <a class="ni sub" href="#"><svg viewBox="0 0 24 24"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg><span>Artiste</span></a>
+        <a class="ni sub" href="#"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><span>Générale</span></a>
+        <div class="nav-sep"></div>
+        <!-- Communication & Assets -->
+        <a class="ni" href="#"><svg viewBox="0 0 24 24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg><span>Marketing</span></a>
+        <a class="ni" href="#"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 015.83 1c0 2-3 3-3 3M12 17h.01"/></svg><span>FAQ</span></a>
+        <a class="ni" href="#"><svg viewBox="0 0 24 24"><path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14"/><rect x="3" y="3" width="18" height="18" rx="2"/></svg><span>Médias</span></a>
+      </div>
+    </div>
+  </div><!-- /left-top -->
+
+  <!-- Bottom bar spanning rail+nav -->
+  <div class="left-bottom">
+    <div class="lb-wrap"><img class="lb-img" src="https://madameloyal.github.io/homepage/leo_profile.jpeg" alt="Leo"><div class="lb-hex"><svg viewBox="0 0 100 100" fill="none"><polygon points="50,2 93,25 93,75 50,98 7,75 7,25" stroke="rgba(212,82,42,.4)" stroke-width="2"/></svg></div></div>
+    <div class="lb-name"><div class="lb-user">Leo</div></div>
+    <div class="lb-icons">
+      <div class="lb-b"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><path d="M12 19v4M8 23h8"/></svg></div>
+      <div class="lb-b"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><ellipse cx="12" cy="12" rx="4" ry="10"/></svg></div>
+      <div class="lb-b"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
+    </div>
+  </div>
+</div>
+
+<!-- 3. MAIN -->
+<div class="main">
+  <div class="topbar">
+    <div class="tb-spacer"></div>
+    <div class="tb-search"><svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg><span>Explore</span></div>
+    <div class="tb-toggle" onclick="document.getElementById('right').classList.toggle('shut')" title="Toggle sidebar"><svg viewBox="0 0 24 24"><rect x="15" y="3" width="6" height="18" rx="1"/><path d="M3 12h8M8 8l4 4-4 4"/></svg></div>
+  </div>
+
+  <div class="content">
+    <!-- Hero -->
+    <div class="hero"><div class="hero-ov"></div><div class="hero-t"><h2>Bienvenue sur<br>Festiflow Suite</h2><p>Paris XXL 2026 · 13 &amp; 14 Mars · Villepinte</p></div></div>
+
+    <!-- Module Recaps — 2x2 -->
+    <div class="sh"><h3>Modules Principaux</h3><a href="#">Voir tout</a></div>
+    <div class="fg">
+      <div class="fc"><div class="fc-bg gp"></div><div class="fc-ct"><h4>Billetterie</h4><p>Ventes &amp; projections ticketing en temps réel pour Paris XXL 2026.</p><div class="st"><span>◎ 87% capacité</span><span>▲ 38 415 billets</span></div></div></div>
+      <div class="fc"><div class="fc-bg gb"></div><div class="fc-ct"><h4>Budget</h4><p>Suivi financier Qonto &amp; ventilation par poste de dépense.</p><div class="st"><span>● 94% consommé</span><span>▲ 2 lignes en attente</span></div></div></div>
+      <div class="fc"><div class="fc-bg gg"></div><div class="fc-ct"><h4>Staffing</h4><p>Gestion VHR, catering &amp; planning des équipes terrain.</p><div class="st"><span>▲ 489 staff confirmés</span><span>● 12 en attente</span></div></div></div>
+      <div class="fc"><div class="fc-bg go"></div><div class="fc-ct"><h4>Marketing</h4><p>Campagnes Meta &amp; Brevo, analytics &amp; engagement.</p><div class="st"><span>◎ 4.2% engagement</span><span>▲ 1 draft prêt</span></div></div></div>
+    </div>
+
+    <!-- Other modules -->
+    <div class="sh"><h3>Autres Modules</h3><a href="#">Voir tout</a></div>
+    <div class="mg">
+      <div class="mc"><h5>Guest List</h5><p>18 listes en attente · 52 artistes</p></div>
+      <div class="mc"><h5>FAQ</h5><p>Chatbot non synchronisé — 8j</p></div>
+      <div class="mc"><h5>Artistes</h5><p>Base artistes · 127 fiches</p></div>
+      <div class="mc"><h5>Médias</h5><p>Dropbox · 2.4 Go utilisés</p></div>
+    </div>
+  </div>
+</div>
+
+<!-- 4. RIGHT SIDEBAR -->
+<div class="right" id="right">
+  <div class="rt-head">
+    <div class="tb-b"><svg viewBox="0 0 24 24"><rect x="2" y="3" width="20" height="14" rx="2"/><path d="M8 21h8M12 17v4"/></svg></div>
+    <div class="tb-b"><svg viewBox="0 0 24 24"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg></div>
+    <div class="tb-b"><svg viewBox="0 0 24 24"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>
+    <div class="tb-b"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-4 0v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 11-2.83-2.83l.06-.06A1.65 1.65 0 004.68 15a1.65 1.65 0 00-1.51-1H3a2 2 0 010-4h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 112.83-2.83l.06.06A1.65 1.65 0 009 4.68a1.65 1.65 0 001-1.51V3a2 2 0 014 0v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 112.83 2.83l-.06.06A1.65 1.65 0 0019.4 9c.38.23.84.35 1.31.35H21a2 2 0 010 4h-.09a1.65 1.65 0 00-1.51 1z"/></svg></div>
+  </div>
+  <div class="pf">
+    <div class="pf-wrap">
+      <img class="pf-img" src="https://madameloyal.github.io/homepage/leo_profile.jpeg" alt="Leo">
+      <div class="pf-hex"><svg viewBox="0 0 100 100" fill="none"><polygon points="50,2 93,25 93,75 50,98 7,75 7,25" stroke="rgba(155,89,182,.4)" stroke-width="1.5"/><polygon points="50,8 88,28 88,72 50,92 12,72 12,28" stroke="rgba(212,82,42,.25)" stroke-width=".8"/></svg></div>
+    </div>
+    <div class="pf-name">Leo</div>
+    <div class="pf-tag">@leo.admin</div>
+  </div>
+
+  <div class="rs">
+    <div class="rs-h">Événements <a href="#">Voir tout</a></div>
+    <div class="cd"><div class="cd-info"><div class="cd-name">Paris XXL 2026</div><div class="cd-date">13-14 Mars · Villepinte</div><div class="cd-date">38 415 / 44 000</div></div><div class="cd-count cd-soon">J-1</div></div>
+    <div class="cd"><div class="cd-info"><div class="cd-name">Bordeaux ML × SONORA</div><div class="cd-date">19 Juin · Bordeaux</div><div class="cd-date">0 / 12 000</div></div><div class="cd-count cd-mid">14 sem.</div></div>
+  </div>
+
+  <div class="rdiv"></div>
+
+  <div class="rs">
+    <div class="rs-h">Tâches assignées <a href="#">Voir tout</a></div>
+    <div class="mr on"><div class="mr-wrap"><div class="mr-av" style="background:linear-gradient(140deg,#a855f7,#6d28d9)">K</div><div class="mr-hex"><svg viewBox="0 0 100 100" fill="none"><polygon points="50,2 93,25 93,75 50,98 7,75 7,25" stroke="rgba(168,85,247,.4)" stroke-width="2"/></svg></div></div><div><div class="mr-n">Karen <span class="mr-ev">PA</span></div><div class="mr-t">FAQ · "Consignes PMR ?"</div></div></div>
+    <div class="mr on"><div class="mr-wrap"><div class="mr-av" style="background:linear-gradient(140deg,#3b82f6,#1d4ed8)">G</div><div class="mr-hex"><svg viewBox="0 0 100 100" fill="none"><polygon points="50,2 93,25 93,75 50,98 7,75 7,25" stroke="rgba(59,130,246,.4)" stroke-width="2"/></svg></div></div><div><div class="mr-n">Greg <span class="mr-ev">PA</span></div><div class="mr-t">Budget · Valider ligne sono</div></div></div>
+    <div class="mr aw"><div class="mr-wrap"><div class="mr-av" style="background:linear-gradient(140deg,#d4522a,#7d1e0a)">L</div><div class="mr-hex"><svg viewBox="0 0 100 100" fill="none"><polygon points="50,2 93,25 93,75 50,98 7,75 7,25" stroke="rgba(212,82,42,.4)" stroke-width="2"/></svg></div></div><div><div class="mr-n">Leo <span class="mr-ev">BO</span></div><div class="mr-t">Guest List · Confirmer artiste</div></div></div>
+  </div>
+
+  <div class="rdiv"></div>
+
+  <div class="rs">
+    <div class="rs-h">Activité récente <a href="#">Voir tout</a></div>
+    <div class="mr on"><div class="mr-wrap"><div class="mr-av" style="background:linear-gradient(140deg,#3b82f6,#1d4ed8)">G</div><div class="mr-hex"><svg viewBox="0 0 100 100" fill="none"><polygon points="50,2 93,25 93,75 50,98 7,75 7,25" stroke="rgba(59,130,246,.4)" stroke-width="2"/></svg></div></div><div><div class="mr-n">Greg <span class="mr-ev">PA</span></div><div class="mr-t">Budget — il y a 14 min</div></div></div>
+    <div class="mr aw"><div class="mr-wrap"><div class="mr-av" style="background:linear-gradient(140deg,#a855f7,#6d28d9)">K</div><div class="mr-hex"><svg viewBox="0 0 100 100" fill="none"><polygon points="50,2 93,25 93,75 50,98 7,75 7,25" stroke="rgba(168,85,247,.4)" stroke-width="2"/></svg></div></div><div><div class="mr-n">Karen <span class="mr-ev">PA</span></div><div class="mr-t">Guest List — il y a 3h</div></div></div>
+    <div class="mr on"><div class="mr-wrap"><div class="mr-av" style="background:linear-gradient(140deg,#d4522a,#7d1e0a)">L</div><div class="mr-hex"><svg viewBox="0 0 100 100" fill="none"><polygon points="50,2 93,25 93,75 50,98 7,75 7,25" stroke="rgba(212,82,42,.4)" stroke-width="2"/></svg></div></div><div><div class="mr-n">Leo <span class="mr-ev">BO</span></div><div class="mr-t">Artistes — il y a 5h</div></div></div>
+  </div>
+</div>
+
+</div><!-- /app -->
+
+<!-- MOBILE TAB BAR -->
+<div class="mob">
+  <div class="mi on"><svg viewBox="0 0 24 24"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1z"/></svg><small>Home</small></div>
+  <div class="mi"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><path d="M14 17.5h7M17.5 14v7"/></svg><small>Dashboard</small></div>
+  <div class="mi"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/></svg><small>Crew</small></div>
+  <div class="mi"><svg viewBox="0 0 24 24"><circle cx="5" cy="12" r="1.5"/><circle cx="12" cy="12" r="1.5"/><circle cx="19" cy="12" r="1.5"/></svg><small>Modules</small></div>
+  <div class="mi"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg><small>Profil</small></div>
+</div>
+
+</body>
+</html>
