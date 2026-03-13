@@ -114,40 +114,31 @@ html,body{
 }
 .rail-icons{display:flex;flex-direction:column;align-items:center;gap:8px;margin:auto 0;padding:6px 0}
 /* Event thumbnail in rail */
-.rail-ev-wrap{position:relative;width:50px;height:50px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:visible;cursor:pointer}
-.rail-ev-wrap::before{
-  content:'';position:absolute;left:-3px;top:50%;transform:translateY(-50%);
-  width:3px;border-radius:0 3px 3px 0;background:#fff;
-  height:0;opacity:0;transition:height .18s,opacity .18s;z-index:3;
-}
-.rail-ev-wrap:hover::before{height:8px;opacity:.5}
-.rail-ev-wrap.on::before{height:18px;opacity:1}
+.rail-ev-wrap{position:relative;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;padding:4px 0}
 .rail-event{
   width:42px;height:42px;
   clip-path:polygon(50% 0%,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%);
   display:flex;align-items:center;justify-content:center;
-  position:relative;z-index:1;
   background:rgba(255,255,255,.08);
   transition:background .2s;
   overflow:hidden;
 }
 .rail-event span{
   font-size:var(--fs-sm);font-weight:var(--fw-b);color:var(--c2);
-  letter-spacing:-.5px;
+  letter-spacing:-.5px;transition:color .2s;
 }
 .rail-event img{width:100%;height:100%;object-fit:cover}
 .rail-ev-wrap:hover .rail-event{background:rgba(255,255,255,.15)}
-.rail-ev-wrap.on .rail-event{background:rgba(255,255,255,.12)}
+.rail-ev-wrap.on .rail-event{background:rgba(255,255,255,.14)}
 .rail-ev-wrap.on .rail-event span{color:#fff}
-/* Active hex frame — C6b gradient + S6 slow spin */
-.rail-ev-hex{
-  position:absolute;inset:-5px;z-index:0;
-  filter:drop-shadow(0 0 6px rgba(212,82,42,.4)) drop-shadow(0 0 14px rgba(155,89,182,.3));
-  display:none;
-  animation:hexspin 20s linear infinite;
+/* Active indicator — accent left bar */
+.rail-ev-wrap::before{
+  content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);
+  width:3px;border-radius:0 3px 3px 0;background:var(--accent);
+  height:0;opacity:0;transition:height .2s,opacity .2s;
 }
-.rail-ev-wrap.on .rail-ev-hex{display:block}
-@keyframes hexspin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+.rail-ev-wrap:hover::before{height:8px;opacity:.5}
+.rail-ev-wrap.on::before{height:20px;opacity:1}
 /* Add event button */
 .rail-add{
   width:42px;height:42px;border-radius:50%;flex-shrink:0;
@@ -494,17 +485,11 @@ html,body{
       <div class="rail-icons">
         <!-- Paris XXL 2026 (active) -->
         <div class="rail-ev-wrap on" onclick="switchEvent(this)">
-          <div class="rail-event" title="Paris XXL 2026">
-            <span>PA</span>
-          </div>
-          <svg class="rail-ev-hex" viewBox="0 0 100 100" fill="none"><defs><linearGradient id="rg1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#d4522a"/><stop offset="100%" stop-color="#9b59b6"/></linearGradient></defs><polygon points="50,2 93,25 93,75 50,98 7,75 7,25" stroke="url(#rg1)" stroke-width="2.5"/></svg>
+          <div class="rail-event" title="Paris XXL 2026"><span>PA</span></div>
         </div>
         <!-- Bordeaux ML × SONORA 2026 -->
         <div class="rail-ev-wrap" onclick="switchEvent(this)">
-          <div class="rail-event" title="Bordeaux ML × SONORA 2026">
-            <span>BO</span>
-          </div>
-          <svg class="rail-ev-hex" viewBox="0 0 100 100" fill="none"><defs><linearGradient id="rg2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#d4522a"/><stop offset="100%" stop-color="#9b59b6"/></linearGradient></defs><polygon points="50,2 93,25 93,75 50,98 7,75 7,25" stroke="url(#rg2)" stroke-width="2.5"/></svg>
+          <div class="rail-event" title="Bordeaux ML × SONORA 2026"><span>BO</span></div>
         </div>
         <!-- Add new event -->
         <div class="rail-add" title="Nouvel événement">+</div>
