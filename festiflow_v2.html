@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="format-detection" content="telephone=no, date=no, address=no">
 <title>Festiflow — Home</title>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
@@ -11,6 +12,7 @@
    Reset & Custom Properties
    ──────────────────────────────────── */
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+a[x-apple-data-detectors]{color:inherit!important;text-decoration:none!important}
 
 :root{
   --accent:#d4522a;
@@ -354,7 +356,7 @@ html,body{
 .cd-info{display:flex;flex-direction:column}
 .cd-name{font-size:var(--fs-md);font-weight:var(--fw-s);color:var(--c2)}
 .cd-date{font-size:var(--fs-sm);color:var(--c3)}
-.cd-cap{font-family:'JetBrains Mono',monospace;font-size:var(--fs-sm);color:var(--c2)}
+.cd-cap{font-family:'JetBrains Mono',monospace;font-size:var(--fs-sm);color:var(--c2)!important;text-decoration:none!important;-webkit-text-decoration:none!important}
 .cd-count{
   font-family:'JetBrains Mono',monospace;
   font-size:var(--fs-sm);font-weight:var(--fw-s);padding:3px 8px;
