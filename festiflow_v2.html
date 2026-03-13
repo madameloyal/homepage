@@ -221,9 +221,9 @@ html,body{
 .ni.sub span{font-size:var(--fs-md)}
 
 /* Bottom-left hex avatar */
-.lb-wrap{position:relative;width:36px;height:36px;flex-shrink:0}
+.lb-wrap{position:relative;width:42px;height:42px;flex-shrink:0}
 .lb-av{
-  width:28px;height:28px;
+  width:33px;height:33px;
   clip-path:polygon(50% 0%,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%);
   background:linear-gradient(140deg,var(--accent),#7d1e0a);
   display:flex;align-items:center;justify-content:center;
@@ -231,11 +231,11 @@ html,body{
   position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2;
 }
 .lb-img{
-  width:28px;height:28px;object-fit:cover;
+  width:33px;height:33px;object-fit:cover;
   clip-path:polygon(50% 0%,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%);
   position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2;
 }
-.lb-hex{position:absolute;inset:1px;z-index:1}
+.lb-hex{position:absolute;inset:0;z-index:1;filter:drop-shadow(0 0 6px rgba(155,89,182,.15))}
 .lb-hex svg{width:100%;height:100%}
 
 /* ────────────────────────────────────
@@ -388,19 +388,19 @@ html,body{
   flex-shrink:0;
 }
 
-/* Profile with hex frame */
+/* Profile with hex frame — C6b gradient stroke */
 .pf{
   padding:28px 20px 20px;display:flex;flex-direction:column;
   align-items:center;border-bottom:1px solid rgba(255,255,255,.06);
 }
 .pf-wrap{position:relative;width:110px;height:110px;margin-bottom:14px}
 .pf-img{
-  width:80px;height:80px;object-fit:cover;
-  clip-path:polygon(50% 2%,93% 25%,93% 75%,50% 98%,7% 75%,7% 25%);
+  width:86px;height:86px;object-fit:cover;
+  clip-path:polygon(50% 0%,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%);
   position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:2;
 }
 /* Hex decorative frame */
-.pf-hex{position:absolute;inset:2px;z-index:1}
+.pf-hex{position:absolute;inset:0;z-index:1;filter:drop-shadow(0 0 12px rgba(155,89,182,.2))}
 .pf-hex svg{width:100%;height:100%}
 
 .pf-name{font-size:var(--fs-lg);font-weight:var(--fw-s);color:#fff;margin-bottom:2px}
@@ -546,7 +546,7 @@ html,body{
 
   <!-- Bottom bar spanning rail+nav -->
   <div class="left-bottom">
-    <div class="lb-wrap"><img class="lb-img" src="https://madameloyal.github.io/homepage/leo_profile.jpeg" alt="Leo"><div class="lb-hex"><svg viewBox="0 0 100 100" fill="none"><polygon points="50,2 93,25 93,75 50,98 7,75 7,25" stroke="rgba(212,82,42,.4)" stroke-width="2"/></svg></div></div>
+    <div class="lb-wrap"><img class="lb-img" src="https://madameloyal.github.io/homepage/leo_profile.jpeg" alt="Leo"><div class="lb-hex"><svg viewBox="0 0 100 100" fill="none"><defs><linearGradient id="lbg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#d4522a"/><stop offset="100%" stop-color="#9b59b6"/></linearGradient></defs><polygon points="50,2 93,25 93,75 50,98 7,75 7,25" stroke="url(#lbg)" stroke-width="1.5"/></svg></div></div>
     <div class="lb-name"><div class="lb-user">Leo</div></div>
     <div class="lb-icons">
       <div class="lb-b"><svg viewBox="0 0 24 24"><path d="M12 1a3 3 0 00-3 3v8a3 3 0 006 0V4a3 3 0 00-3-3z"/><path d="M19 10v2a7 7 0 01-14 0v-2"/><path d="M12 19v4M8 23h8"/></svg></div>
@@ -599,7 +599,7 @@ html,body{
   <div class="pf">
     <div class="pf-wrap">
       <img class="pf-img" src="https://madameloyal.github.io/homepage/leo_profile.jpeg" alt="Leo">
-      <div class="pf-hex"><svg viewBox="0 0 100 100" fill="none"><polygon points="50,2 93,25 93,75 50,98 7,75 7,25" stroke="rgba(155,89,182,.4)" stroke-width="1.5"/><polygon points="50,8 88,28 88,72 50,92 12,72 12,28" stroke="rgba(212,82,42,.25)" stroke-width=".8"/></svg></div>
+      <div class="pf-hex"><svg viewBox="0 0 100 100" fill="none"><defs><linearGradient id="pfg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#d4522a"/><stop offset="100%" stop-color="#9b59b6"/></linearGradient></defs><polygon points="50,2 93,25 93,75 50,98 7,75 7,25" stroke="url(#pfg)" stroke-width="1.5"/></svg></div>
     </div>
     <div class="pf-name">Leo</div>
     <div class="pf-tag">@leo.admin</div>
