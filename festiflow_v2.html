@@ -114,12 +114,19 @@ html,body{
 }
 .rail-icons{display:flex;flex-direction:column;align-items:center;gap:8px;margin:auto 0;padding:6px 0}
 /* Event thumbnail in rail */
-.rail-ev-wrap{position:relative;width:50px;height:50px;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.rail-ev-wrap{position:relative;width:50px;height:50px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:visible;cursor:pointer}
+.rail-ev-wrap::before{
+  content:'';position:absolute;left:-3px;top:50%;transform:translateY(-50%);
+  width:3px;border-radius:0 3px 3px 0;background:#fff;
+  height:0;opacity:0;transition:height .18s,opacity .18s;z-index:3;
+}
+.rail-ev-wrap:hover::before{height:8px;opacity:.5}
+.rail-ev-wrap.on::before{height:18px;opacity:1}
 .rail-event{
   width:42px;height:42px;
   clip-path:polygon(50% 0%,93% 25%,93% 75%,50% 100%,7% 75%,7% 25%);
   display:flex;align-items:center;justify-content:center;
-  cursor:pointer;position:relative;z-index:1;
+  position:relative;z-index:1;
   background:rgba(255,255,255,.08);
   transition:background .2s;
   overflow:hidden;
@@ -129,25 +136,18 @@ html,body{
   letter-spacing:-.5px;
 }
 .rail-event img{width:100%;height:100%;object-fit:cover}
-.rail-event:hover{background:rgba(255,255,255,.12)}
-.rail-event.on span{color:#fff}
+.rail-ev-wrap:hover .rail-event{background:rgba(255,255,255,.15)}
+.rail-ev-wrap.on .rail-event{background:rgba(255,255,255,.12)}
+.rail-ev-wrap.on .rail-event span{color:#fff}
 /* Active hex frame — C6b gradient + S6 slow spin */
 .rail-ev-hex{
-  position:absolute;inset:-3px;z-index:0;
-  filter:drop-shadow(0 0 12px rgba(155,89,182,.2));
+  position:absolute;inset:-5px;z-index:0;
+  filter:drop-shadow(0 0 6px rgba(212,82,42,.4)) drop-shadow(0 0 14px rgba(155,89,182,.3));
   display:none;
   animation:hexspin 20s linear infinite;
 }
-.rail-event.on ~ .rail-ev-hex{display:block}
+.rail-ev-wrap.on .rail-ev-hex{display:block}
 @keyframes hexspin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
-/* Active indicator pill */
-.rail-event::before{
-  content:'';position:absolute;left:-3px;top:50%;transform:translateY(-50%);
-  width:3px;border-radius:0 3px 3px 0;background:#fff;
-  height:0;opacity:0;transition:height .18s,opacity .18s;
-}
-.rail-event:hover::before{height:8px;opacity:.5}
-.rail-event.on::before{height:18px;opacity:1}
 /* Add event button */
 .rail-add{
   width:42px;height:42px;border-radius:50%;flex-shrink:0;
@@ -493,17 +493,18 @@ html,body{
       <div class="rail-top"><div class="rail-logo"><img src="https://madameloyal.github.io/homepage/LOGO_ROND_JAUNE.png" alt="Festiflow"></div></div>
       <div class="rail-icons">
         <!-- Paris XXL 2026 (active) -->
-        <div class="rail-ev-wrap">
-          <div class="rail-event on" title="Paris XXL 2026">
+        <div class="rail-ev-wrap on" onclick="switchEvent(this)">
+          <div class="rail-event" title="Paris XXL 2026">
             <span>PA</span>
           </div>
-          <svg class="rail-ev-hex" viewBox="0 0 100 100" fill="none"><defs><linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#d4522a"/><stop offset="100%" stop-color="#9b59b6"/></linearGradient></defs><polygon points="50,2 93,25 93,75 50,98 7,75 7,25" stroke="url(#rg)" stroke-width="1.5"/></svg>
+          <svg class="rail-ev-hex" viewBox="0 0 100 100" fill="none"><defs><linearGradient id="rg1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#d4522a"/><stop offset="100%" stop-color="#9b59b6"/></linearGradient></defs><polygon points="50,2 93,25 93,75 50,98 7,75 7,25" stroke="url(#rg1)" stroke-width="2.5"/></svg>
         </div>
         <!-- Bordeaux ML × SONORA 2026 -->
-        <div class="rail-ev-wrap">
+        <div class="rail-ev-wrap" onclick="switchEvent(this)">
           <div class="rail-event" title="Bordeaux ML × SONORA 2026">
             <span>BO</span>
           </div>
+          <svg class="rail-ev-hex" viewBox="0 0 100 100" fill="none"><defs><linearGradient id="rg2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#d4522a"/><stop offset="100%" stop-color="#9b59b6"/></linearGradient></defs><polygon points="50,2 93,25 93,75 50,98 7,75 7,25" stroke="url(#rg2)" stroke-width="2.5"/></svg>
         </div>
         <!-- Add new event -->
         <div class="rail-add" title="Nouvel événement">+</div>
@@ -643,5 +644,11 @@ html,body{
   <div class="mi"><svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg><small>Profil</small></div>
 </div>
 
+<script>
+function switchEvent(el){
+  document.querySelectorAll('.rail-ev-wrap').forEach(w=>w.classList.remove('on'));
+  el.classList.add('on');
+}
+</script>
 </body>
 </html>
